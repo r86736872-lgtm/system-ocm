@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Migrasi SFD Mission</title>
+    <!-- Menggunakan font modern 'Inter' yang sederhana dan elegan -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset Dasar */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Font baru yang lebih bersih */
+            background-color: #0d011c; 
+            color: #e0d0f5; 
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Latar Belakang & Elemen Bergerak */
+        .main-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        /* Gradasi Latar Belakang Bergerak */
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a023a 0%, #0d011c 100%);
+            animation: backgroundPulse 10s infinite alternate;
+            z-index: -2;
+        }
+
+        /* Bentuk Mengambang Berbintang */
+        .glowing-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 30%, rgba(75, 0, 130, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 50% 80%, rgba(186, 85, 211, 0.15) 0%, transparent 20%);
+            filter: blur(50px);
+            z-index: -1;
+            animation: shapesFloat 15s infinite ease-in-out;
+        }
+
+        /* Kartu Migrasi (Glassmorphism) */
+        .migration-card {
+            background-color: rgba(26, 2, 58, 0.4); 
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(224, 208, 245, 0.15);
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+            animation: cardEntrance 1s ease-out;
+            text-align: center;
+        }
+
+        /* Garis Aksen Bergerak di Atas */
+        .top-accent-bar {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, #8a2be2, #00ffff, #8a2be2);
+            background-size: 200% 100%;
+            animation: barFlow 3s linear infinite;
+        }
+
+        /* Styling Logo SFDM */
+        .logo-container {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            width: 130px;
+            height: auto;
+            border-radius: 24px; 
+            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.5);
+            animation: floatLogo 4s ease-in-out infinite;
+            border: 2px solid rgba(224, 208, 245, 0.2);
+        }
+
+        /* Judul Utama */
+        .main-title {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            letter-spacing: -0.5px;
+        }
+
+        /* Deskripsi */
+        .description {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            color: #bfa1f0;
+            font-weight: 400;
+        }
+
+        .description strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .highlight-date {
+            background-color: rgba(138, 43, 226, 0.2);
+            padding: 3px 8px;
+            border-radius: 6px;
+            color: #00ffff;
+            font-weight: 600;
+        }
+
+        /* Tombol Download APK Bergerak */
+        .download-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600; /* Disesuaikan agar lebih rapi */
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(224, 208, 245, 0.2);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.4s ease;
+        }
+
+        .download-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.6);
+        }
+
+        .download-button:hover::before {
+            left: 100%;
+        }
+
+        .download-icon {
+            margin-left: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .download-button:hover .download-icon {
+            transform: translateY(2px);
+        }
+
+        /* Keyframes Animasi */
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes backgroundPulse {
+            0% { background: radial-gradient(circle at center, #1a023a 0%, #0d011c 100%); }
+            100% { background: radial-gradient(circle at center, #1a023a 15%, #0d011c 100%); }
+        }
+
+        @keyframes shapesFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(2% , -3%) scale(1.05); }
+            66% { transform: translate(-2% , 2%) scale(0.95); }
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes barFlow {
+            0% { background-position: 100% 0%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* Responsivitas untuk layar kecil */
+        @media (max-width: 480px) {
+            .migration-card { padding: 40px 25px; }
+            .main-title { font-size: 24px; }
+            .description { font-size: 15px; }
+            .logo-container img { width: 110px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="particles"></div>
+        <div class="glowing-shapes"></div>
+
+        <!-- Kartu Pemberitahuan -->
+        <div class="migration-card">
+            <div class="top-accent-bar"></div>
+            
+            <!-- Logo SFDM -->
+            <div class="logo-container">
+                <img src="logo_SFDM.png" alt="Logo SFDM">
+            </div>
+            
+            <h1 class="main-title">Pindah ke Aplikasi</h1>
+            
+            <p class="description">
+                Mulai tanggal <span class="highlight-date">30 Juli 2026</span>, layanan website ini akan sepenuhnya dialihkan ke dalam bentuk aplikasi. Segera unduh aplikasi terbaru untuk melanjutkan akses ke <strong>SFD Mission</strong> dan rasakan pengalaman sistem yang jauh lebih stabil, cepat, dan lebih baik.
+            </p>
+            
+            <!-- Tombol Download APK -->
+            <a href="https://drive.google.com/file/d/1XCMEePEmAu3ymBlM5A5GjakdWZ6lsa1_/view?usp=drivesdk" class="download-button" target="_blank" rel="noopener noreferrer">
+                <span>Download Aplikasi (APK)</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="download-icon">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
